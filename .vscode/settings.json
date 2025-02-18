@@ -56,5 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "FunnyGuys Prototype.sln"
+    "dotnet.defaultSolution": "FunnyGuys Prototype.sln",
+    "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

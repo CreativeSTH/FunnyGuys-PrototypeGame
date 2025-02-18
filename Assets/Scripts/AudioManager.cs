@@ -4,8 +4,8 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
 
-    private AudioSource fxSource;
-    private AudioSource musicSource;
+    [SerializeField] private AudioSource fxSource;
+    [SerializeField] private AudioSource musicSource;
 
     private void Awake()
     {
@@ -63,20 +63,5 @@ public class AudioManager : MonoBehaviour
         {
             musicSource.Stop();
         }
-    }
-
-    // Método para manejar la entrada del usuario (Enter o clic)
-    public void HandleInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0)) // Enter o clic izquierdo
-        {
-            PlayFX("click_sound"); // Reproduce un sonido al presionar Enter o hacer clic
-            StopMusic(); // Detiene la música de fondo (opcional)
-        }
-    }
-
-    private void Update()
-    {
-        HandleInput(); // Verifica la entrada del usuario en cada frame
     }
 }

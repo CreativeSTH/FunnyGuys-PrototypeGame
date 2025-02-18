@@ -61,4 +61,11 @@ public class GameManager : MonoBehaviour
         isPaused = !isPaused;
         Time.timeScale = isPaused ? 0 : 1;
     }
+
+    public void PressStart()
+    {
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlayFX("start");
+        SceneManager.LoadScene("MenuScene");
+    }
 }

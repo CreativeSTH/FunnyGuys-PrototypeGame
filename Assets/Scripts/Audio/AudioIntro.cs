@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AudioIntro : MonoBehaviour
+public class AudioScIntro : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
