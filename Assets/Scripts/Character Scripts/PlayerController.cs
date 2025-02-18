@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 5f;
     public float jumpForce = 5f;
     public float doubleJumpForce = 5f;
-    public float runSpeed = 8f;
+    public float runSpeed = 5f;
     private float horizontal, vertical;
     private Vector3 moveDirection;
     // Variables de Acciones de movimiento
@@ -83,12 +83,12 @@ public class PlayerController : MonoBehaviour
         // Acelerador - Sprint 
         if (Input.GetButton("Debug Multiplier") && isGrounded)
         {
-            moveSpeed = runSpeed; // Velocidad de correr
+            ApplySpeed();
             playerAnimation.SetBool("isRunning", true); // Activa la animación de correr
         }
         else
         {
-            moveSpeed = 2f; // Velocidad normal
+            ApplySlow();
             playerAnimation.SetBool("isRunning", false); // Desactiva la animación de correr
         }
     }
@@ -108,6 +108,14 @@ public class PlayerController : MonoBehaviour
     {
         // Usamos método AddForce en Rigidbody para aplicar una fuerza vertical con modo de Impulso
         playerRigidbody.AddForce(Vector3.up * doubleJumpForce, ForceMode.Impulse);
+    }
+    private void ApplySpeed()
+    {
+        moveSpeed = runSpeed; // Velocidad de correr
+    }
+    private void ApplySlow()
+    {
+        moveSpeed = 2f; // Velocidad normal
     }
 
    private void CheckGrounded()
