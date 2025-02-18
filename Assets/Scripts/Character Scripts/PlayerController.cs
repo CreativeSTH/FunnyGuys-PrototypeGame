@@ -3,18 +3,23 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Configuración")]
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 10f;
-    public float jumpForce = 7f;
-
-    [SerializeField] private Rigidbody playerRigidbody;
-    [SerializeField] private Animator playerAnimation;
-
+    // Variables de movimento
+    public float moveSpeed = 2f;
+    public float rotationSpeed = 5f;
+    public float jumpForce = 5f;
+    public float doubleJumpForce = 5f;
+    public float runSpeed = 8f;
     private float horizontal, vertical;
     private Vector3 moveDirection;
+    // Variables de Acciones de movimiento
     private bool isGrounded;
-    public bool isJumping; // Indica si el personaje está saltando
-    public bool isFalling; // Indica si el personaje está cayendo
+    public bool isJumping;
+    public bool isFalling;
+    private bool hasJumped = false;
+    private bool canDoubleJump = false;
+    // Variables de componentes
+    [SerializeField] private Rigidbody playerRigidbody;
+    [SerializeField] private Animator playerAnimation;
 
     void Start()
     {
@@ -52,25 +57,39 @@ public class PlayerController : MonoBehaviour
         vertical = Input.GetAxis("Vertical");
         moveDirection = new Vector3(horizontal, 0f, vertical).normalized;
 
+
         // Salto si oprimimos Boton Jump (input manager) y está tocando el suelo.
         if (Input.GetButtonDown("Jump"))
         {
             if (isGrounded)
             {
                 ApplyJump();
+                hasJumped = true;
+                canDoubleJump = true;
                 isJumping = true;
                 isFalling = false;
                 playerAnimation.SetBool("IsJumping", true); // Activa la animación de salto inicial
                 playerAnimation.SetBool("IsFalling", false);
                 playerAnimation.SetBool("IsGrounded", false);
-            }else{
-                isJumping = false;
-                isFalling = false;
-                playerAnimation.SetBool("IsJumping", false);
-                playerAnimation.SetBool("IsFalling", false);
-                playerAnimation.SetBool("IsGrounded", true);
             }
+            else if(hasJumped && canDoubleJump){
+                ApplyDoubleJump();
+                playerAnimation.SetBool("IsFalling", true);
+                hasJumped = false;
+                canDoubleJump = false;
+            }
+        }
 
+        // Acelerador - Sprint 
+        if (Input.GetButton("Debug Multiplier") && isGrounded)
+        {
+            moveSpeed = runSpeed; // Velocidad de correr
+            playerAnimation.SetBool("isRunning", true); // Activa la animación de correr
+        }
+        else
+        {
+            moveSpeed = 2f; // Velocidad normal
+            playerAnimation.SetBool("isRunning", false); // Desactiva la animación de correr
         }
     }
 
@@ -85,6 +104,11 @@ public class PlayerController : MonoBehaviour
         // Usamos método AddForce en Rigidbody para aplicar una fuerza vertical con modo de Impulso
         playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+     private void ApplyDoubleJump()
+    {
+        // Usamos método AddForce en Rigidbody para aplicar una fuerza vertical con modo de Impulso
+        playerRigidbody.AddForce(Vector3.up * doubleJumpForce, ForceMode.Impulse);
+    }
 
    private void CheckGrounded()
 {
@@ -98,8 +122,6 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             playerAnimation.SetBool("IsFalling", false);
-            // Activa la animación de aterrizaje
-            playerAnimation.SetTrigger("JumpEnd");
         }
     }
     else
@@ -120,8 +142,6 @@ public class PlayerController : MonoBehaviour
             isJumping = false;
             playerAnimation.SetBool("IsJumping", false);
             playerAnimation.SetBool("IsFalling", true); 
-            playerAnimation.SetTrigger("JumpEnd");
-            Debug.Log("JumpEnd activado");
         }
     }
 
