@@ -64,8 +64,6 @@ public class GameManager : MonoBehaviour
 
     public void PressStart()
     {
-        AudioManager.Instance.StopMusic();
-        AudioManager.Instance.PlayFX("start");
         SceneManager.LoadScene("MenuScene");
     }
 }

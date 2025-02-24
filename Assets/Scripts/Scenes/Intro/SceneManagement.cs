@@ -5,15 +5,15 @@ public class SceneManagement : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        AudioManager.Instance.PlayMusic("gameloop");
-        AudioManager.Instance.PlayFX("start");
+        AudioManager.Instance.PlayMusic("Menumusic");
     }
 
     // Método para manejar la entrada del usuario (Enter o clic)
     public void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0)) // Enter o clic izquierdo
+        if (Input.GetKeyDown(KeyCode.Return)) // Enter o clic izquierdo
         {
+            AudioManager.Instance.PlayFX("start");
             GameManager.Instance.PressStart();
         }
     }

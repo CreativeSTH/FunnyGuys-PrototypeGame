@@ -1,11 +1,14 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
 
-    [SerializeField] private AudioSource fxSource;
-    [SerializeField] private AudioSource musicSource;
+    private AudioSource fxSource;
+    private AudioSource musicSource;
+
+    [SerializeField] public AudioMixer audioMixer;
 
     private void Awake()
     {
@@ -22,6 +25,22 @@ public class AudioManager : MonoBehaviour
         // Inicializa las fuentes de audio
         fxSource = gameObject.AddComponent<AudioSource>();
         musicSource = gameObject.AddComponent<AudioSource>();
+        // Inicializamos el Mixer
+        audioMixer = Resources.Load<AudioMixer>("AudioMaster");
+        
+        // Asignamos canales al audioMixer
+         if (audioMixer != null)
+        {
+            // Asigna el canal "Fx" al fxSource
+            fxSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Fx")[0];
+            
+            // Asigna el canal "Music" al musicSource
+            musicSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups("Music")[0];
+        }
+        else
+        {
+            Debug.LogWarning("El mixer de audio no se pudo cargar.");
+        }
     }
 
     // Método para reproducir efectos de sonido
@@ -64,4 +83,6 @@ public class AudioManager : MonoBehaviour
             musicSource.Stop();
         }
     }
+
+ 
 }
